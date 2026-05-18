@@ -1,0 +1,2473 @@
+{
+  "project_summary": "A “Memory Palace Chat” where every message you send decorates a shared, evolving 3-D room: your words become floating origami objects that drift to shelves, walls, or ceilings, and the AI can fold, stack, or repaint them into new shapes that whisper back summaries, jokes, or forgotten details whenever you hover. The longer the conversation, the more labyrinthine the palace grows, so revisiting old topics feels like walking through a glowing museum of your own thoughts, complete with secret doors that open only when you and the AI simultaneously type the same spontaneous word.",
+  "technology_stack": {
+    "frontend": "React",
+    "backend": "Express.js",
+    "database": "PostgreSQL",
+    "deployment": "Vercel"
+  },
+  "phases": [
+    {
+      "issues": [
+        {
+          "id": "setup-001",
+          "title": "Initialize Monorepo Structure with Turborepo",
+          "description": "Establish a monorepo structure using Turborepo to manage the React frontend and Node.js backend, ensuring shared TypeScript configurations and efficient build caching.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Root directory configuration, workspace definition, and shared TSConfig setup.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Initialize git repository",
+              "Install Turborepo globally",
+              "Create apps/ and packages/ directories"
+            ],
+            "implementation_tasks": [
+              "Configure turbo.json",
+              "Create base tsconfig.json",
+              "Setup ESLint and Prettier shared configs"
+            ],
+            "testing_tasks": [
+              "Verify build pipeline with 'turbo run build'",
+              "Check linting across workspaces"
+            ],
+            "documentation_tasks": [
+              "Update README.md with monorepo structure overview"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Turborepo successfully orchestrates builds",
+              "Shared linting rules apply to both apps",
+              "TypeScript paths are correctly resolved"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "setup/repo-init",
+          "recommended_commits": [
+            "feat: initialize monorepo with turborepo",
+            "chore: add shared linting and tsconfig"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "infrastructure",
+            "turborepo",
+            "typescript"
+          ],
+          "notes": "Ensure that the root package.json handles workspace hoisting correctly."
+        },
+        {
+          "id": "setup-002",
+          "title": "Define PostgreSQL Schema for Spatial Objects",
+          "description": "Design and implement the database schema using Prisma ORM to handle users, conversation threads, and the 3D spatial coordinates of origami objects.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Prisma schema definition, migration scripts, and initial database connection logic.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install Prisma CLI and client",
+              "Initialize Prisma in backend workspace"
+            ],
+            "implementation_tasks": [
+              "Define User model",
+              "Define Message model with spatial metadata (x, y, z)",
+              "Define Thread model",
+              "Run initial migration"
+            ],
+            "testing_tasks": [
+              "Verify schema generation",
+              "Test database connection via Prisma Studio"
+            ],
+            "documentation_tasks": [
+              "Document schema relationships in ERD diagram"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Prisma client generates types correctly",
+              "Database migrations execute without errors",
+              "Spatial coordinates are stored as numeric/float types"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "setup/db-schema",
+          "recommended_commits": [
+            "feat: add prisma schema for users and messages",
+            "chore: run initial database migration"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "setup-001"
+          ],
+          "tags": [
+            "database",
+            "prisma",
+            "postgresql"
+          ],
+          "notes": "Consider using JSONB for flexible origami metadata storage."
+        },
+        {
+          "id": "setup-003",
+          "title": "Implement Secure Environment Configuration",
+          "description": "Set up a robust environment variable management system using dotenv and Zod for schema validation to ensure type-safe configuration across the stack.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Environment variable loading, validation, and gitignore configuration.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install dotenv and zod",
+              "Create .env.example files"
+            ],
+            "implementation_tasks": [
+              "Implement config validation module",
+              "Ensure sensitive keys are excluded from git",
+              "Configure environment injection in build scripts"
+            ],
+            "testing_tasks": [
+              "Verify app fails on missing required env vars",
+              "Test successful loading of mock env vars"
+            ],
+            "documentation_tasks": [
+              "Update setup instructions in README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Application crashes gracefully if required env vars are missing",
+              "No secrets committed to repository",
+              "Environment variables are type-safe"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "setup/env-config",
+          "recommended_commits": [
+            "feat: add env validation with zod",
+            "chore: add .env.example templates"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "setup-001"
+          ],
+          "tags": [
+            "security",
+            "configuration"
+          ],
+          "notes": "Use a centralized config package within the monorepo to share constants."
+        },
+        {
+          "id": "setup-004",
+          "title": "Configure CI/CD Pipeline for Automated Checks",
+          "description": "Create GitHub Actions workflows to automate linting, type-checking, and build verification on every pull request.",
+          "type": "deployment",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "GitHub Actions YAML configuration, workflow triggers.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create .github/workflows directory"
+            ],
+            "implementation_tasks": [
+              "Define CI workflow for linting",
+              "Define CI workflow for build verification",
+              "Add caching for node_modules"
+            ],
+            "testing_tasks": [
+              "Trigger workflow via PR",
+              "Verify build success in CI environment"
+            ],
+            "documentation_tasks": [
+              "Add CI status badge to README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "CI pipeline runs on every push",
+              "Build fails if linting or type-checking fails",
+              "Pipeline execution time is optimized with caching"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "setup/ci-cd",
+          "recommended_commits": [
+            "feat: add github actions for ci",
+            "chore: optimize ci build caching"
+          ],
+          "estimated_hours": 5,
+          "dependencies": [
+            "setup-001"
+          ],
+          "tags": [
+            "ci-cd",
+            "github-actions"
+          ],
+          "notes": "Ensure the pipeline handles the monorepo structure correctly using turbo-run."
+        },
+        {
+          "id": "setup-005",
+          "title": "Standardize Dependency Versions",
+          "description": "Audit and lock versions for core dependencies like Three.js, React-Three-Fiber, and Express to prevent breaking changes during the setup phase.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "package.json dependency management, lockfile verification.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Audit current dependency tree"
+            ],
+            "implementation_tasks": [
+              "Pin versions for Three.js and R3F",
+              "Standardize Express middleware versions",
+              "Remove redundant dependencies"
+            ],
+            "testing_tasks": [
+              "Run full project build",
+              "Verify no dependency conflicts"
+            ],
+            "documentation_tasks": [
+              "Update dependency policy in README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "All core dependencies are pinned to specific versions",
+              "No conflicting peer dependencies",
+              "Build completes successfully with locked versions"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "setup/deps",
+          "recommended_commits": [
+            "chore: pin core dependencies",
+            "chore: audit and clean package dependencies"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [
+            "setup-001"
+          ],
+          "tags": [
+            "dependencies",
+            "maintenance"
+          ],
+          "notes": "Focus specifically on ensuring Three.js and R3F versions are compatible."
+        }
+      ],
+      "batchNumber": 1
+    },
+    {
+      "issues": [
+        {
+          "id": "AUTH-001",
+          "title": "Implement JWT Authentication Middleware",
+          "description": "Develop a secure authentication middleware to protect API routes using JSON Web Tokens.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Authentication layer for all protected API endpoints.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install jsonwebtoken and bcryptjs",
+              "Define JWT_SECRET in environment variables"
+            ],
+            "implementation_tasks": [
+              "Create signToken utility",
+              "Implement verifyToken middleware",
+              "Add user context to request object"
+            ],
+            "testing_tasks": [
+              "Test valid token access",
+              "Test expired token rejection",
+              "Test missing token rejection"
+            ],
+            "documentation_tasks": [
+              "Update API security documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Requests without valid JWT return 401",
+              "User ID is correctly extracted from token payload"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/auth",
+          "recommended_commits": [
+            "feat: add JWT signing and verification utilities",
+            "feat: implement auth middleware"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "auth",
+            "security"
+          ],
+          "notes": "Ensure token expiration is set to a reasonable duration (e.g., 1 hour)."
+        },
+        {
+          "id": "SPATIAL-001",
+          "title": "Create Spatial Coordinate CRUD Endpoints",
+          "description": "Implement RESTful endpoints to manage the 3D coordinates (x, y, z) and rotation data for origami objects.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Spatial metadata storage for origami objects.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Define SpatialObject schema in PostgreSQL"
+            ],
+            "implementation_tasks": [
+              "Create POST /spatial endpoint",
+              "Create GET /spatial/:objectId endpoint",
+              "Create PATCH /spatial/:objectId for updates"
+            ],
+            "testing_tasks": [
+              "Validate coordinate range constraints",
+              "Test partial updates for rotation data"
+            ],
+            "documentation_tasks": [
+              "Document spatial API schema"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Coordinates are stored as floats",
+              "API returns 404 for non-existent objects"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/spatial-api",
+          "recommended_commits": [
+            "feat: create spatial object migration",
+            "feat: implement spatial CRUD controllers"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "AUTH-001"
+          ],
+          "tags": [
+            "spatial",
+            "api"
+          ],
+          "notes": "Consider adding validation to prevent objects from overlapping in the 3D space."
+        },
+        {
+          "id": "AI-001",
+          "title": "Develop AI Transformation Service",
+          "description": "Create a service that parses user text and returns structural transformation data for the origami object.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "AI logic for mapping text sentiment/content to 3D object properties.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Integrate OpenAI SDK or local NLP library"
+            ],
+            "implementation_tasks": [
+              "Define transformation schema (fold count, color, scale)",
+              "Create service to process text input",
+              "Implement response parsing logic"
+            ],
+            "testing_tasks": [
+              "Test text-to-transformation mapping accuracy",
+              "Test error handling for API timeouts"
+            ],
+            "documentation_tasks": [
+              "Document transformation schema"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Service returns valid JSON structure",
+              "Transformation values are within defined bounds"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/ai-logic",
+          "recommended_commits": [
+            "feat: add AI transformation service",
+            "feat: implement text-to-object logic"
+          ],
+          "estimated_hours": 12,
+          "dependencies": [],
+          "tags": [
+            "ai",
+            "logic"
+          ],
+          "notes": "Ensure the service is decoupled from the main message flow for easier testing."
+        },
+        {
+          "id": "DB-001",
+          "title": "Implement Repository Pattern for Messages",
+          "description": "Abstract database access for messages using the Repository pattern to decouple business logic from SQL queries.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Message persistence layer.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Define Message interface/type"
+            ],
+            "implementation_tasks": [
+              "Create MessageRepository class",
+              "Implement findByThreadId method",
+              "Implement saveMessage method"
+            ],
+            "testing_tasks": [
+              "Unit test repository methods",
+              "Verify database connection pooling"
+            ],
+            "documentation_tasks": [
+              "Update architecture diagrams"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Repository methods return consistent data types",
+              "Database errors are caught and logged"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/message-db",
+          "recommended_commits": [
+            "feat: add message repository interface",
+            "feat: implement message repository"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "database",
+            "refactor"
+          ],
+          "notes": "Use dependency injection to pass the repository to controllers."
+        },
+        {
+          "id": "TRIGGER-001",
+          "title": "Implement Simultaneous Word Detection Logic",
+          "description": "Create backend logic to detect if multiple users input specific trigger words simultaneously to initiate 'secret' events.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "low",
+          "scope": "Real-time event detection.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Define trigger word list"
+            ],
+            "implementation_tasks": [
+              "Implement WebSocket listener for message events",
+              "Create temporal window for simultaneous detection",
+              "Trigger event broadcast"
+            ],
+            "testing_tasks": [
+              "Test multi-user timing scenarios",
+              "Verify trigger word matching"
+            ],
+            "documentation_tasks": [
+              "Document trigger event behavior"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Events trigger only when words match within the time window",
+              "System handles high-frequency message bursts"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/secret-triggers",
+          "recommended_commits": [
+            "feat: add trigger word detection service",
+            "feat: implement WebSocket event listener"
+          ],
+          "estimated_hours": 10,
+          "dependencies": [
+            "DB-001"
+          ],
+          "tags": [
+            "real-time",
+            "events"
+          ],
+          "notes": "Use Redis for tracking short-term state to ensure performance."
+        },
+        {
+          "id": "AUTH-002",
+          "title": "Implement User Registration and Login Endpoints",
+          "description": "Expose endpoints for user sign-up and authentication, hashing passwords securely.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "User account management.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create User model"
+            ],
+            "implementation_tasks": [
+              "Implement POST /auth/register",
+              "Implement POST /auth/login",
+              "Add password hashing with bcrypt"
+            ],
+            "testing_tasks": [
+              "Test duplicate email registration",
+              "Test invalid password login"
+            ],
+            "documentation_tasks": [
+              "Update API documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Passwords are never stored in plain text",
+              "Registration returns success status"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/auth",
+          "recommended_commits": [
+            "feat: add user registration",
+            "feat: add user login"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [
+            "AUTH-001"
+          ],
+          "tags": [
+            "auth",
+            "user"
+          ],
+          "notes": "Ensure input validation is strictly enforced."
+        },
+        {
+          "id": "SPATIAL-002",
+          "title": "Implement Spatial Querying for Proximity",
+          "description": "Add functionality to query spatial objects based on proximity to a specific coordinate.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Spatial database queries.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install PostGIS extension"
+            ],
+            "implementation_tasks": [
+              "Create GET /spatial/nearby endpoint",
+              "Implement spatial distance calculation query"
+            ],
+            "testing_tasks": [
+              "Test proximity search accuracy",
+              "Test empty results handling"
+            ],
+            "documentation_tasks": [
+              "Document spatial query parameters"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Nearby objects are returned within a defined radius",
+              "Query performance is optimized"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/spatial-api",
+          "recommended_commits": [
+            "feat: add PostGIS support",
+            "feat: implement proximity search"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "SPATIAL-001"
+          ],
+          "tags": [
+            "spatial",
+            "database"
+          ],
+          "notes": "Use spatial indexing for performance."
+        },
+        {
+          "id": "AI-002",
+          "title": "Implement AI Transformation Caching",
+          "description": "Cache AI transformation results to reduce API costs and improve response times for repeated inputs.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Performance optimization for AI service.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Redis cache"
+            ],
+            "implementation_tasks": [
+              "Implement cache lookup before AI call",
+              "Implement cache write after AI call"
+            ],
+            "testing_tasks": [
+              "Verify cache hit/miss behavior",
+              "Test cache invalidation"
+            ],
+            "documentation_tasks": [
+              "Update performance documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Repeated inputs return cached results",
+              "Cache TTL is set appropriately"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/ai-logic",
+          "recommended_commits": [
+            "feat: add Redis caching for AI results"
+          ],
+          "estimated_hours": 5,
+          "dependencies": [
+            "AI-001"
+          ],
+          "tags": [
+            "ai",
+            "performance"
+          ],
+          "notes": "Use a hash of the input text as the cache key."
+        },
+        {
+          "id": "DB-002",
+          "title": "Implement Message Threading Logic",
+          "description": "Extend the message repository to support hierarchical threading of messages.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Database schema and repository updates.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Update Message schema for parent_id"
+            ],
+            "implementation_tasks": [
+              "Update repository to fetch thread trees",
+              "Add recursive query support"
+            ],
+            "testing_tasks": [
+              "Test thread retrieval",
+              "Test deep nesting"
+            ],
+            "documentation_tasks": [
+              "Update schema documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Messages are correctly linked to parents",
+              "Thread retrieval returns ordered list"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/message-db",
+          "recommended_commits": [
+            "feat: add parent_id to messages",
+            "feat: implement thread retrieval"
+          ],
+          "estimated_hours": 7,
+          "dependencies": [
+            "DB-001"
+          ],
+          "tags": [
+            "database",
+            "data-structure"
+          ],
+          "notes": "Ensure efficient SQL queries for tree traversal."
+        },
+        {
+          "id": "TEST-001",
+          "title": "Establish Integration Testing Suite",
+          "description": "Create a base integration testing suite for the backend to ensure cross-module compatibility.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Backend integration tests.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Jest and Supertest"
+            ],
+            "implementation_tasks": [
+              "Create test database setup/teardown",
+              "Write base test for auth-to-spatial flow"
+            ],
+            "testing_tasks": [
+              "Run full suite",
+              "Verify test coverage"
+            ],
+            "documentation_tasks": [
+              "Write testing guide"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "All tests pass in CI environment",
+              "Database is reset between tests"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "backend/testing",
+          "recommended_commits": [
+            "setup: add integration testing framework",
+            "test: add initial integration tests"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "AUTH-001",
+            "SPATIAL-001"
+          ],
+          "tags": [
+            "testing",
+            "ci"
+          ],
+          "notes": "Use a dedicated test database instance."
+        }
+      ],
+      "batchNumber": 2
+    },
+    {
+      "issues": [
+        {
+          "id": "MPC-021",
+          "title": "Initialize React-Three-Fiber Canvas and Scene Setup",
+          "description": "Set up the core R3F Canvas component with a basic lighting rig and camera setup to serve as the foundation for the 3D environment.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Root 3D container component and scene lighting configuration.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install @react-three/fiber and @react-three/drei",
+              "Configure Canvas component with antialiasing"
+            ],
+            "implementation_tasks": [
+              "Add AmbientLight and DirectionalLight",
+              "Set up PerspectiveCamera with initial FOV"
+            ],
+            "testing_tasks": [
+              "Verify canvas renders in browser",
+              "Check for WebGL context errors"
+            ],
+            "documentation_tasks": [
+              "Document scene coordinate system"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Canvas renders without console errors",
+              "Basic lighting is visible in the scene"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/3d-scene",
+          "recommended_commits": [
+            "feat: initialize R3F canvas",
+            "feat: add basic lighting rig"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [],
+          "tags": [
+            "core",
+            "3d-scene"
+          ],
+          "notes": "Ensure the canvas is set to fill the viewport."
+        },
+        {
+          "id": "MPC-022",
+          "title": "Develop Origami Object Mesh Component",
+          "description": "Create a reusable 3D component that represents a message as an origami-style object using BufferGeometry.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Origami mesh geometry and material properties.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create OrigamiObject component file"
+            ],
+            "implementation_tasks": [
+              "Define custom geometry for origami shape",
+              "Apply MeshStandardMaterial",
+              "Implement prop-based color/size scaling"
+            ],
+            "testing_tasks": [
+              "Verify mesh renders in scene",
+              "Check material responsiveness to light"
+            ],
+            "documentation_tasks": [
+              "Document origami geometry props"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Component renders a 3D mesh",
+              "Component accepts position and rotation props"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/origami-comp",
+          "recommended_commits": [
+            "feat: create origami mesh component"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "origami",
+            "3d-component"
+          ],
+          "notes": "Use Drei's MeshDistortMaterial for a more organic feel."
+        },
+        {
+          "id": "MPC-023",
+          "title": "Implement Responsive 2D Chat Overlay",
+          "description": "Build a persistent 2D UI layer using Tailwind CSS that sits on top of the 3D canvas for user input.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Chat input field, message history list, and layout container.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Setup CSS grid/flex layout for overlay"
+            ],
+            "implementation_tasks": [
+              "Create Input component",
+              "Create MessageList component",
+              "Ensure z-index layering over Canvas"
+            ],
+            "testing_tasks": [
+              "Verify input responsiveness",
+              "Test overlay visibility on mobile"
+            ],
+            "documentation_tasks": [
+              "Document UI component structure"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Chat UI is accessible over the 3D scene",
+              "Input field captures text correctly"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/chat-ui",
+          "recommended_commits": [
+            "feat: add chat overlay layout",
+            "feat: implement chat input field"
+          ],
+          "estimated_hours": 5,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "ui",
+            "chat"
+          ],
+          "notes": "Ensure pointer-events are handled correctly so the 3D scene remains interactive."
+        },
+        {
+          "id": "MPC-024",
+          "title": "Implement Raycasting for Origami Hover Events",
+          "description": "Enable interaction detection for origami objects using R3F raycasting to trigger hover states.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Event listeners on OrigamiObject components.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Import useCursor from Drei"
+            ],
+            "implementation_tasks": [
+              "Add onPointerOver/onPointerOut handlers",
+              "Implement hover state scaling animation"
+            ],
+            "testing_tasks": [
+              "Verify hover detection in scene",
+              "Test cursor change on hover"
+            ],
+            "documentation_tasks": [
+              "Document interaction logic"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Objects scale up on hover",
+              "Cursor changes to pointer on hover"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/hover-logic",
+          "recommended_commits": [
+            "feat: add raycasting hover handlers"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "MPC-022"
+          ],
+          "tags": [
+            "interaction",
+            "raycasting"
+          ],
+          "notes": "Keep hover logic lightweight to maintain 60fps."
+        },
+        {
+          "id": "MPC-025",
+          "title": "Add Camera Navigation Controls",
+          "description": "Implement OrbitControls or custom camera movement to allow users to explore the 3D environment.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Camera movement logic and constraints.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Import OrbitControls from Drei"
+            ],
+            "implementation_tasks": [
+              "Configure camera limits",
+              "Add smooth damping to movement"
+            ],
+            "testing_tasks": [
+              "Verify camera rotation and zoom",
+              "Test movement constraints"
+            ],
+            "documentation_tasks": [
+              "Document camera control settings"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "User can rotate around the scene",
+              "Camera movement is smooth"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/navigation",
+          "recommended_commits": [
+            "feat: add orbit controls"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "navigation",
+            "camera"
+          ],
+          "notes": "Consider limiting zoom distance to prevent clipping."
+        },
+        {
+          "id": "MPC-026",
+          "title": "Integrate State Management for Origami Objects",
+          "description": "Connect the frontend state to the list of origami objects to dynamically render them in the scene.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Zustand store integration for object coordinates.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Initialize Zustand store"
+            ],
+            "implementation_tasks": [
+              "Map message data to OrigamiObject components",
+              "Implement dynamic key generation"
+            ],
+            "testing_tasks": [
+              "Verify objects render based on state",
+              "Test state updates"
+            ],
+            "documentation_tasks": [
+              "Document state schema"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Objects appear based on state",
+              "Adding a message adds an object to the scene"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/state-management",
+          "recommended_commits": [
+            "feat: add zustand store for objects"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [
+            "MPC-022"
+          ],
+          "tags": [
+            "state",
+            "data"
+          ],
+          "notes": "Ensure efficient re-renders using memoization."
+        },
+        {
+          "id": "MPC-027",
+          "title": "Add Post-Processing Bloom Effect",
+          "description": "Enhance the visual quality of the 3D scene by adding a bloom effect to origami objects.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "low",
+          "scope": "EffectComposer and Bloom pass configuration.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install @react-three/postprocessing"
+            ],
+            "implementation_tasks": [
+              "Setup EffectComposer",
+              "Configure Bloom parameters"
+            ],
+            "testing_tasks": [
+              "Verify bloom intensity",
+              "Check performance impact"
+            ],
+            "documentation_tasks": [
+              "Document post-processing setup"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Bloom effect is visible on objects",
+              "Performance remains stable"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "frontend/visual-polish",
+          "recommended_commits": [
+            "feat: add bloom post-processing"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "visuals",
+            "post-processing"
+          ],
+          "notes": "Keep bloom subtle to maintain readability."
+        },
+        {
+          "id": "MPC-028",
+          "title": "Implement Loading State for 3D Assets",
+          "description": "Add a Suspense-based loading screen while the 3D scene and assets are initializing.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "React Suspense and Loader component.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create Loader component"
+            ],
+            "implementation_tasks": [
+              "Wrap Canvas in Suspense",
+              "Implement loading progress bar"
+            ],
+            "testing_tasks": [
+              "Verify loader visibility during load"
+            ],
+            "documentation_tasks": [
+              "Document loading strategy"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Loader shows during initial load",
+              "Scene renders after load"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/loading-state",
+          "recommended_commits": [
+            "feat: add scene loading state"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "ux",
+            "loading"
+          ],
+          "notes": "Use Drei's Html component for the loader."
+        },
+        {
+          "id": "MPC-029",
+          "title": "Optimize Origami Geometry Performance",
+          "description": "Refactor origami components to use instanced meshes for better performance with large conversation histories.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "InstancedMesh implementation.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Analyze current draw calls"
+            ],
+            "implementation_tasks": [
+              "Convert OrigamiObject to use InstancedMesh",
+              "Update state management for instances"
+            ],
+            "testing_tasks": [
+              "Verify draw call reduction",
+              "Test interaction with instances"
+            ],
+            "documentation_tasks": [
+              "Document instancing strategy"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Draw calls reduced significantly",
+              "Interactions still work"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/optimization",
+          "recommended_commits": [
+            "perf: implement instanced meshes"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "MPC-022"
+          ],
+          "tags": [
+            "performance",
+            "optimization"
+          ],
+          "notes": "Instancing is critical for scaling to hundreds of messages."
+        },
+        {
+          "id": "MPC-030",
+          "title": "Add Error Boundary for 3D Scene",
+          "description": "Implement a React Error Boundary to catch WebGL context losses or rendering errors.",
+          "type": "bug_fix",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Error boundary component wrapping the Canvas.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create ErrorBoundary component"
+            ],
+            "implementation_tasks": [
+              "Implement componentDidCatch",
+              "Add fallback UI"
+            ],
+            "testing_tasks": [
+              "Simulate WebGL error",
+              "Verify fallback UI renders"
+            ],
+            "documentation_tasks": [
+              "Document error handling strategy"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "App doesn't crash on WebGL error",
+              "User is notified of error"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "frontend/error-handling",
+          "recommended_commits": [
+            "fix: add error boundary to canvas"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [
+            "MPC-021"
+          ],
+          "tags": [
+            "stability",
+            "error-handling"
+          ],
+          "notes": "Ensure the fallback UI allows for a page refresh."
+        }
+      ],
+      "batchNumber": 3
+    },
+    {
+      "issues": [
+        {
+          "id": "SOC-001",
+          "title": "Implement Socket.io Connection Manager",
+          "description": "Establish a robust WebSocket connection layer to handle real-time updates for origami object placement.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Frontend Socket.io client initialization and connection lifecycle management.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install socket.io-client",
+              "Create socket service provider"
+            ],
+            "implementation_tasks": [
+              "Implement connection retry logic",
+              "Add event listeners for 'object-created' and 'object-updated'"
+            ],
+            "testing_tasks": [
+              "Verify connection persistence on page refresh",
+              "Test socket disconnection handling"
+            ],
+            "documentation_tasks": [
+              "Document event schema for 3D object updates"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Client connects to server on mount",
+              "Connection status is tracked in React state",
+              "Server-side events trigger console logs"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/sockets",
+          "recommended_commits": [
+            "feat: initialize socket.io client",
+            "feat: add connection lifecycle hooks"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "sockets",
+            "real-time"
+          ],
+          "notes": "Ensure connection is closed on component unmount to prevent memory leaks."
+        },
+        {
+          "id": "API-001",
+          "title": "Standardize Axios API Service Layer",
+          "description": "Create a centralized API service to handle all RESTful requests with consistent error handling and interceptors.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Frontend API service module for all backend endpoints.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Axios instance with base URL",
+              "Define API response interfaces"
+            ],
+            "implementation_tasks": [
+              "Create interceptors for request logging",
+              "Implement global error handling interceptor"
+            ],
+            "testing_tasks": [
+              "Verify API calls return expected data structures",
+              "Test 401/403 error handling"
+            ],
+            "documentation_tasks": [
+              "Update API service README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "All API calls use the centralized service",
+              "Errors are caught and logged consistently",
+              "Base URL is configurable via env variables"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/api-service",
+          "recommended_commits": [
+            "feat: create base axios instance",
+            "refactor: migrate endpoints to api service"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [],
+          "tags": [
+            "api",
+            "refactor"
+          ],
+          "notes": "Ensure all endpoints are typed using TypeScript interfaces."
+        },
+        {
+          "id": "AUTH-001",
+          "title": "Sync JWT with Frontend Auth Context",
+          "description": "Implement an AuthProvider to manage JWT storage and synchronization with the application state.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Frontend authentication state management.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create AuthContext",
+              "Implement secure token storage (localStorage/cookies)"
+            ],
+            "implementation_tasks": [
+              "Add login/logout methods",
+              "Implement JWT validation on app load"
+            ],
+            "testing_tasks": [
+              "Test token persistence after refresh",
+              "Verify protected route redirection"
+            ],
+            "documentation_tasks": [
+              "Document auth flow"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "User session persists across reloads",
+              "JWT is attached to Axios headers",
+              "Unauthenticated users redirected to login"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/auth-flow",
+          "recommended_commits": [
+            "feat: implement auth context",
+            "feat: add jwt interceptor to axios"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "API-001"
+          ],
+          "tags": [
+            "auth",
+            "security"
+          ],
+          "notes": "Use HttpOnly cookies if possible for enhanced security."
+        },
+        {
+          "id": "SYNC-001",
+          "title": "Initial 3D State Hydration",
+          "description": "Fetch existing origami objects from PostgreSQL and render them in the 3D scene on initial load.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Data fetching and 3D object instantiation.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Define object hydration service"
+            ],
+            "implementation_tasks": [
+              "Fetch objects from API on mount",
+              "Map DB coordinates to R3F object positions"
+            ],
+            "testing_tasks": [
+              "Verify all objects appear in scene",
+              "Test empty state"
+            ],
+            "documentation_tasks": [
+              "Document object coordinate mapping"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Scene populates with objects from DB",
+              "Coordinates match stored metadata",
+              "Loading state is displayed during fetch"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "integration/state-sync",
+          "recommended_commits": [
+            "feat: implement initial scene hydration",
+            "fix: coordinate mapping logic"
+          ],
+          "estimated_hours": 10,
+          "dependencies": [
+            "API-001"
+          ],
+          "tags": [
+            "3d",
+            "r3f",
+            "sync"
+          ],
+          "notes": "Consider batching requests if the object count is high."
+        },
+        {
+          "id": "BUS-001",
+          "title": "Implement Centralized Event Bus",
+          "description": "Create an event bus to decouple UI interactions from the 3D engine rendering logic.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Communication layer between React UI and Three.js scene.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Choose event emitter library (e.g., mitt)"
+            ],
+            "implementation_tasks": [
+              "Create event bus singleton",
+              "Implement event listeners in 3D components"
+            ],
+            "testing_tasks": [
+              "Verify UI events trigger 3D updates"
+            ],
+            "documentation_tasks": [
+              "Document event types"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "UI components can trigger 3D actions",
+              "3D engine can emit events to UI",
+              "Loose coupling maintained"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/event-bus",
+          "recommended_commits": [
+            "feat: add event bus implementation"
+          ],
+          "estimated_hours": 5,
+          "dependencies": [],
+          "tags": [
+            "architecture",
+            "events"
+          ],
+          "notes": "Avoid over-using the event bus; keep it for cross-boundary communication."
+        },
+        {
+          "id": "SOC-002",
+          "title": "Handle Real-time Object Updates",
+          "description": "Update the 3D scene dynamically when other users create or modify origami objects.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Socket.io event handling for object mutations.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Define socket event handlers"
+            ],
+            "implementation_tasks": [
+              "Update local state on 'object-updated' event",
+              "Trigger re-render of specific 3D object"
+            ],
+            "testing_tasks": [
+              "Test multi-user synchronization"
+            ],
+            "documentation_tasks": [
+              "Document real-time update flow"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Objects move/change in real-time",
+              "No full scene re-render required",
+              "State remains consistent with DB"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/sockets",
+          "recommended_commits": [
+            "feat: handle real-time object updates"
+          ],
+          "estimated_hours": 7,
+          "dependencies": [
+            "SOC-001",
+            "SYNC-001"
+          ],
+          "tags": [
+            "sockets",
+            "real-time"
+          ],
+          "notes": "Use optimistic UI updates for better performance."
+        },
+        {
+          "id": "API-002",
+          "title": "Implement API Caching Strategy",
+          "description": "Add caching to the API service to reduce redundant network requests for static metadata.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "low",
+          "scope": "Frontend API service layer.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Implement simple in-memory cache"
+            ],
+            "implementation_tasks": [
+              "Add cache-control headers",
+              "Implement cache invalidation logic"
+            ],
+            "testing_tasks": [
+              "Verify cache hits/misses"
+            ],
+            "documentation_tasks": [
+              "Document caching strategy"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Redundant requests are minimized",
+              "Data remains fresh via invalidation",
+              "Performance metrics improve"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/api-service",
+          "recommended_commits": [
+            "feat: add api caching layer"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "API-001"
+          ],
+          "tags": [
+            "performance",
+            "api"
+          ],
+          "notes": "Be careful with stale data in a real-time environment."
+        },
+        {
+          "id": "AUTH-002",
+          "title": "Implement Token Refresh Logic",
+          "description": "Handle JWT expiration by implementing an automatic token refresh mechanism.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Auth service and Axios interceptors.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create refresh token endpoint"
+            ],
+            "implementation_tasks": [
+              "Add 401 interceptor to retry requests with new token"
+            ],
+            "testing_tasks": [
+              "Test token expiration scenario"
+            ],
+            "documentation_tasks": [
+              "Document refresh flow"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "User is not logged out on token expiry",
+              "Requests are retried automatically",
+              "Refresh token is secure"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/auth-flow",
+          "recommended_commits": [
+            "feat: add token refresh logic"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [
+            "AUTH-001"
+          ],
+          "tags": [
+            "auth",
+            "security"
+          ],
+          "notes": "Ensure race conditions are handled if multiple requests fail simultaneously."
+        },
+        {
+          "id": "SYNC-002",
+          "title": "Implement Optimistic UI for Object Creation",
+          "description": "Update the 3D scene immediately when a user creates an object, before the server confirms.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Frontend state management and 3D scene.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Update state management store"
+            ],
+            "implementation_tasks": [
+              "Add temporary object to scene",
+              "Handle server confirmation/rejection"
+            ],
+            "testing_tasks": [
+              "Test UI responsiveness during slow network"
+            ],
+            "documentation_tasks": [
+              "Document optimistic update flow"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Object appears instantly",
+              "Rollback occurs on server error",
+              "No visual glitches"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/state-sync",
+          "recommended_commits": [
+            "feat: add optimistic UI for objects"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [
+            "SYNC-001"
+          ],
+          "tags": [
+            "ux",
+            "sync"
+          ],
+          "notes": "Use unique client-side IDs for temporary objects."
+        },
+        {
+          "id": "BUS-002",
+          "title": "Integrate Event Bus with Socket Events",
+          "description": "Bridge the socket.io event stream with the internal event bus to notify UI components of remote changes.",
+          "type": "feature",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Socket service and Event Bus.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Import event bus into socket service"
+            ],
+            "implementation_tasks": [
+              "Emit event bus events on socket message receipt"
+            ],
+            "testing_tasks": [
+              "Verify UI updates via event bus"
+            ],
+            "documentation_tasks": [
+              "Update event bus documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Socket events propagate to UI components",
+              "Decoupling is maintained",
+              "No direct socket dependency in UI"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/event-bus",
+          "recommended_commits": [
+            "feat: bridge socket events to bus"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "SOC-001",
+            "BUS-001"
+          ],
+          "tags": [
+            "events",
+            "sockets"
+          ],
+          "notes": "Ensure event naming conventions are consistent."
+        },
+        {
+          "id": "TEST-001",
+          "title": "Integration Test Suite Setup",
+          "description": "Establish a base integration testing environment for the frontend-backend communication layer.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Testing infrastructure.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Jest/Cypress for integration tests"
+            ],
+            "implementation_tasks": [
+              "Create mock server for API/Socket tests",
+              "Write test for auth flow"
+            ],
+            "testing_tasks": [
+              "Run suite in CI"
+            ],
+            "documentation_tasks": [
+              "Document how to run integration tests"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Integration tests run in CI",
+              "Mock server covers core API endpoints",
+              "Auth flow is covered"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "integration/testing",
+          "recommended_commits": [
+            "test: setup integration test suite"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "API-001",
+            "AUTH-001"
+          ],
+          "tags": [
+            "testing",
+            "ci"
+          ],
+          "notes": "Use MSW (Mock Service Worker) for API mocking."
+        }
+      ],
+      "batchNumber": 4
+    },
+    {
+      "issues": [
+        {
+          "id": "TEST-001",
+          "title": "Implement Jest Unit Testing for Spatial Orchestration Logic",
+          "description": "Develop a comprehensive suite of unit tests for the backend utility functions responsible for calculating origami object coordinates and spatial placement logic.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Backend utility functions in /src/utils/spatial-logic.js",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install Jest and ts-jest",
+              "Configure jest.config.js for ESM support"
+            ],
+            "implementation_tasks": [
+              "Write tests for coordinate collision detection",
+              "Test object folding algorithm transformations",
+              "Mock database responses for spatial metadata"
+            ],
+            "testing_tasks": [
+              "Run coverage report",
+              "Verify edge cases for overlapping coordinates"
+            ],
+            "documentation_tasks": [
+              "Update README with test execution instructions"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Minimum 80% code coverage for spatial utilities",
+              "All tests pass in CI environment"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "testing/unit",
+          "recommended_commits": [
+            "feat: setup jest environment",
+            "test: add spatial logic unit tests"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "backend",
+            "testing",
+            "jest"
+          ],
+          "notes": "Ensure mocks for PostgreSQL spatial queries are isolated from the database connection."
+        },
+        {
+          "id": "TEST-002",
+          "title": "Component Testing for 3D Origami UI Elements",
+          "description": "Implement React Testing Library tests for the core 3D components to ensure proper rendering and state updates when new messages arrive.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Frontend components in /src/components/origami",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install @testing-library/react and @testing-library/jest-dom"
+            ],
+            "implementation_tasks": [
+              "Create tests for OrigamiObject component rendering",
+              "Test prop validation for spatial coordinates",
+              "Verify event handling for object selection"
+            ],
+            "testing_tasks": [
+              "Run component integration tests",
+              "Check for memory leaks in component unmounting"
+            ],
+            "documentation_tasks": [
+              "Document component testing patterns"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Origami components render correctly in JSDOM",
+              "User interaction events trigger expected state changes"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "testing/components",
+          "recommended_commits": [
+            "feat: add react testing library",
+            "test: implement origami component tests"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "TEST-001"
+          ],
+          "tags": [
+            "frontend",
+            "testing",
+            "react"
+          ],
+          "notes": "Use react-three-fiber testing utilities to mock the WebGL canvas environment."
+        },
+        {
+          "id": "TEST-003",
+          "title": "End-to-End Flow Testing for Chat-to-Object Pipeline",
+          "description": "Create integration tests that simulate the full lifecycle of a message: from API submission to spatial object generation and WebSocket broadcast.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Full stack integration from API to WebGL state",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Supertest for API testing",
+              "Setup test database container"
+            ],
+            "implementation_tasks": [
+              "Write flow test for message submission",
+              "Verify WebSocket payload delivery",
+              "Assert database persistence of spatial coordinates"
+            ],
+            "testing_tasks": [
+              "Run full integration suite",
+              "Validate cleanup of test data"
+            ],
+            "documentation_tasks": [
+              "Update integration test documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Message submission results in valid spatial object creation",
+              "WebSocket events contain correct coordinate metadata"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "testing/integration",
+          "recommended_commits": [
+            "feat: setup integration test suite",
+            "test: add chat-to-object flow tests"
+          ],
+          "estimated_hours": 12,
+          "dependencies": [
+            "TEST-002"
+          ],
+          "tags": [
+            "integration",
+            "testing",
+            "api"
+          ],
+          "notes": "Use a dedicated test database schema to prevent data corruption."
+        },
+        {
+          "id": "TEST-004",
+          "title": "Performance Profiling of 3D Rendering Engine",
+          "description": "Audit the WebGL rendering performance to identify bottlenecks in the origami object instantiation and scene graph updates.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Frontend WebGL rendering loop",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Integrate Chrome DevTools performance monitoring",
+              "Setup benchmark script for scene complexity"
+            ],
+            "implementation_tasks": [
+              "Measure frame rate during object injection",
+              "Profile memory usage of 3D geometry buffers",
+              "Identify unnecessary re-renders"
+            ],
+            "testing_tasks": [
+              "Run performance benchmarks",
+              "Compare results against baseline"
+            ],
+            "documentation_tasks": [
+              "Create performance report document"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Maintain 60fps during standard interaction",
+              "Memory usage remains stable during object accumulation"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "testing/perf",
+          "recommended_commits": [
+            "perf: add performance profiling tools",
+            "perf: optimize scene graph updates"
+          ],
+          "estimated_hours": 10,
+          "dependencies": [
+            "TEST-003"
+          ],
+          "tags": [
+            "performance",
+            "webgl",
+            "testing"
+          ],
+          "notes": "Focus on object pooling strategies if memory usage spikes."
+        },
+        {
+          "id": "TEST-005",
+          "title": "Edge Case Validation for Large Conversation Histories",
+          "description": "Test the system's stability and performance when handling large volumes of conversation history and thousands of spatial objects.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "low",
+          "scope": "System stress testing",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create data seeding script for large datasets"
+            ],
+            "implementation_tasks": [
+              "Simulate 10,000+ origami objects in the scene",
+              "Test pagination/lazy loading of spatial data",
+              "Verify system recovery after high-load stress"
+            ],
+            "testing_tasks": [
+              "Run stress tests",
+              "Monitor server response times"
+            ],
+            "documentation_tasks": [
+              "Document system limits and findings"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "System remains responsive with 10k objects",
+              "Database queries for spatial data remain under 200ms"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "testing/edge-cases",
+          "recommended_commits": [
+            "test: add data seeding script",
+            "test: implement stress testing suite"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "TEST-004"
+          ],
+          "tags": [
+            "stress-test",
+            "testing",
+            "database"
+          ],
+          "notes": "Ensure the test environment has sufficient resources to mimic production-like behavior."
+        }
+      ],
+      "batchNumber": 5
+    },
+    {
+      "issues": [
+        {
+          "id": "DEP-001",
+          "title": "Configure Vercel Build Pipeline and Redirects",
+          "description": "Configure the Vercel project settings to handle the React-Three-Fiber frontend and the Node.js backend API, ensuring proper routing for SPA navigation and API proxying.",
+          "type": "deployment",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Vercel project configuration, vercel.json rewrite rules, and build command optimization.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Initialize vercel.json in root",
+              "Define build commands for frontend and backend"
+            ],
+            "implementation_tasks": [
+              "Configure rewrites for API routes to point to backend service",
+              "Implement SPA fallback for React router"
+            ],
+            "testing_tasks": [
+              "Verify build success in Vercel preview environment",
+              "Test API proxying from frontend to backend"
+            ],
+            "documentation_tasks": [
+              "Update README with deployment build instructions"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Frontend loads correctly in production",
+              "API calls route to backend without CORS errors",
+              "SPA routing preserves state on refresh"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "deploy/vercel",
+          "recommended_commits": [
+            "feat: add vercel.json configuration",
+            "chore: optimize build commands for production"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "deployment",
+            "vercel",
+            "infrastructure"
+          ],
+          "notes": "Ensure the build output directory matches the React-Three-Fiber build folder."
+        },
+        {
+          "id": "DEP-002",
+          "title": "Implement Automated Database Migration Script",
+          "description": "Create a robust migration runner that executes PostgreSQL schema updates during the deployment process to ensure the database stays in sync with the application code.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Database migration scripts, CI/CD integration, and connection pooling configuration.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Select migration tool (e.g., Knex or Prisma)",
+              "Create migration directory"
+            ],
+            "implementation_tasks": [
+              "Write script to run migrations on startup",
+              "Ensure idempotent migration execution"
+            ],
+            "testing_tasks": [
+              "Test migration rollback scenarios",
+              "Verify schema integrity in staging DB"
+            ],
+            "documentation_tasks": [
+              "Document migration workflow for developers"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Migrations run automatically on deploy",
+              "Database schema matches expected state",
+              "No data loss during schema updates"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "deploy/migrations",
+          "recommended_commits": [
+            "feat: add database migration runner",
+            "fix: ensure idempotent migration execution"
+          ],
+          "estimated_hours": 10,
+          "dependencies": [
+            "DEP-001"
+          ],
+          "tags": [
+            "database",
+            "deployment",
+            "migrations"
+          ],
+          "notes": "Use a migration lock mechanism to prevent concurrent migration execution."
+        },
+        {
+          "id": "DEP-003",
+          "title": "Configure SSL and Custom Domain",
+          "description": "Provision SSL certificates and map the custom domain to the Vercel deployment, ensuring secure HTTPS communication for the spatial chat platform.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "DNS settings, Vercel domain management, and SSL certificate verification.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Update DNS A/CNAME records",
+              "Add domain to Vercel dashboard"
+            ],
+            "implementation_tasks": [
+              "Configure SSL/TLS settings",
+              "Enforce HTTPS redirection"
+            ],
+            "testing_tasks": [
+              "Verify SSL certificate validity",
+              "Check domain resolution"
+            ],
+            "documentation_tasks": [
+              "Update security documentation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Site is accessible via custom domain",
+              "SSL certificate is valid and trusted",
+              "All traffic is forced to HTTPS"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "deploy/domain",
+          "recommended_commits": [
+            "chore: configure custom domain and SSL"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "DEP-001"
+          ],
+          "tags": [
+            "security",
+            "dns",
+            "deployment"
+          ],
+          "notes": "DNS propagation may take up to 24 hours."
+        },
+        {
+          "id": "DEP-004",
+          "title": "Integrate Production Monitoring and Error Tracking",
+          "description": "Implement Sentry or similar error tracking and logging to monitor the health of the 3D environment and backend API in production.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "Frontend error boundaries, backend logging middleware, and monitoring dashboard setup.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Create Sentry project",
+              "Install SDKs for React and Node.js"
+            ],
+            "implementation_tasks": [
+              "Configure frontend error boundary",
+              "Add backend request logging middleware"
+            ],
+            "testing_tasks": [
+              "Trigger test error to verify reporting",
+              "Check dashboard for logs"
+            ],
+            "documentation_tasks": [
+              "Add monitoring alert thresholds to README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Errors are captured in real-time",
+              "Performance metrics are visible",
+              "Alerts are configured for critical failures"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "deploy/monitoring",
+          "recommended_commits": [
+            "feat: integrate Sentry error tracking",
+            "feat: add backend logging middleware"
+          ],
+          "estimated_hours": 8,
+          "dependencies": [
+            "DEP-001"
+          ],
+          "tags": [
+            "monitoring",
+            "observability",
+            "deployment"
+          ],
+          "notes": "Ensure sensitive user data is scrubbed from logs."
+        },
+        {
+          "id": "DEP-005",
+          "title": "Secure Environment Variable Injection",
+          "description": "Establish a secure workflow for managing production secrets (DB credentials, API keys) using Vercel's environment variable management system.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Vercel dashboard secret configuration, local .env.example templates.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Identify all required production secrets",
+              "Create .env.example file"
+            ],
+            "implementation_tasks": [
+              "Inject secrets into Vercel dashboard",
+              "Update application code to use process.env"
+            ],
+            "testing_tasks": [
+              "Verify application successfully reads production secrets",
+              "Ensure no secrets are committed to git"
+            ],
+            "documentation_tasks": [
+              "Update security guide for secret rotation"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Secrets are not hardcoded",
+              "Application connects to production DB using injected vars",
+              "No secrets found in repository"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "deploy/env-vars",
+          "recommended_commits": [
+            "chore: add .env.example",
+            "fix: remove hardcoded credentials"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "DEP-001"
+          ],
+          "tags": [
+            "security",
+            "configuration",
+            "deployment"
+          ],
+          "notes": "Use Vercel's 'Encrypted' setting for all production secrets."
+        },
+        {
+          "id": "DEP-006",
+          "title": "Deployment Smoke Test Suite",
+          "description": "Develop a set of automated smoke tests to run post-deployment to verify the core functionality of the Memory Palace Chat platform.",
+          "type": "testing",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "End-to-end tests for login, message creation, and 3D object rendering.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Configure Playwright or Cypress",
+              "Define test environment variables"
+            ],
+            "implementation_tasks": [
+              "Write test for user authentication",
+              "Write test for message persistence",
+              "Write test for 3D scene initialization"
+            ],
+            "testing_tasks": [
+              "Run tests against staging environment"
+            ],
+            "documentation_tasks": [
+              "Add instructions for running smoke tests"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Smoke tests pass on production deployment",
+              "Critical user flows are verified",
+              "Tests run in CI pipeline"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "deploy/smoke-tests",
+          "recommended_commits": [
+            "feat: add smoke test suite",
+            "chore: integrate smoke tests into CI"
+          ],
+          "estimated_hours": 12,
+          "dependencies": [
+            "DEP-001",
+            "DEP-002"
+          ],
+          "tags": [
+            "testing",
+            "qa",
+            "deployment"
+          ],
+          "notes": "Focus on the 'happy path' for the user experience."
+        }
+      ],
+      "batchNumber": 6
+    },
+    {
+      "issues": [
+        {
+          "id": "DOC-001",
+          "title": "Implement OpenAPI/Swagger Specification for REST API",
+          "description": "Generate comprehensive OpenAPI 3.0 documentation for the backend REST API to facilitate frontend integration and external API consumption.",
+          "type": "documentation",
+          "status": "todo",
+          "priority": "high",
+          "scope": "All existing REST endpoints including Auth, User Profiles, and Origami Object management.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Install swagger-jsdoc and swagger-ui-express",
+              "Configure base OpenAPI metadata"
+            ],
+            "implementation_tasks": [
+              "Annotate controller routes with JSDoc/OpenAPI schemas",
+              "Define reusable components for Message and Origami objects",
+              "Create schemas for spatial coordinate metadata"
+            ],
+            "testing_tasks": [
+              "Validate generated JSON against OpenAPI schema validator",
+              "Verify Swagger UI renders correctly in dev environment"
+            ],
+            "documentation_tasks": [
+              "Add instructions on how to update docs in the README"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Swagger UI is accessible at /api-docs",
+              "All endpoints are documented with request/response examples",
+              "Schema definitions match PostgreSQL models"
+            ],
+            "automated_tests": true
+          },
+          "branch_name": "docs/api",
+          "recommended_commits": [
+            "feat: add swagger-jsdoc configuration",
+            "docs: annotate API endpoints with OpenAPI schemas"
+          ],
+          "estimated_hours": 6,
+          "dependencies": [],
+          "tags": [
+            "api",
+            "documentation",
+            "backend"
+          ],
+          "notes": "Ensure spatial coordinate types are clearly defined in the schema."
+        },
+        {
+          "id": "DOC-002",
+          "title": "Create System Architecture Visualizations",
+          "description": "Develop visual documentation illustrating the relationship between the React-Three-Fiber frontend, the WebSocket state synchronization, and the PostgreSQL spatial database.",
+          "type": "documentation",
+          "status": "todo",
+          "priority": "medium",
+          "scope": "High-level system architecture and data flow diagrams.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Select diagramming tool (e.g., Mermaid.js or Lucidchart)"
+            ],
+            "implementation_tasks": [
+              "Create C4 model Level 1 diagram",
+              "Map 3D object lifecycle from DB to WebGL render",
+              "Document WebSocket event flow for real-time state sync"
+            ],
+            "testing_tasks": [
+              "Peer review of diagrams for technical accuracy"
+            ],
+            "documentation_tasks": [
+              "Embed diagrams into the project documentation folder"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Architecture diagrams are rendered in Markdown",
+              "Data flow between DB and 3D environment is clearly depicted",
+              "Diagrams are stored in /docs/assets"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "docs/architecture",
+          "recommended_commits": [
+            "docs: add system architecture diagrams",
+            "docs: update architecture overview with visual flow"
+          ],
+          "estimated_hours": 4,
+          "dependencies": [
+            "DOC-001"
+          ],
+          "tags": [
+            "architecture",
+            "documentation"
+          ],
+          "notes": "Use Mermaid.js for version-controlled diagrams."
+        },
+        {
+          "id": "DOC-003",
+          "title": "Write Comprehensive Local Developer Setup Guide",
+          "description": "Create a robust README.md that guides new developers through the environment setup, database seeding, and local execution of the Memory Palace Chat stack.",
+          "type": "setup",
+          "status": "todo",
+          "priority": "high",
+          "scope": "Environment variables, Docker/Local DB setup, and dependency installation.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Audit current installation process"
+            ],
+            "implementation_tasks": [
+              "Document Node.js/PostgreSQL version requirements",
+              "Create .env.example template",
+              "Write step-by-step guide for database migration and seeding",
+              "Add troubleshooting section for WebGL/GPU issues"
+            ],
+            "testing_tasks": [
+              "Verify setup steps on a clean machine"
+            ],
+            "documentation_tasks": [
+              "Update root README.md with link to setup guide"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "New developer can spin up the project in under 30 minutes",
+              "All environment variables are documented",
+              "Database migration commands are verified"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "docs/setup",
+          "recommended_commits": [
+            "docs: create detailed local setup guide",
+            "docs: add .env.example template"
+          ],
+          "estimated_hours": 5,
+          "dependencies": [],
+          "tags": [
+            "setup",
+            "onboarding"
+          ],
+          "notes": "Include specific instructions for handling WebGL/Three.js hardware acceleration issues."
+        },
+        {
+          "id": "DOC-004",
+          "title": "Define Project Contribution Guidelines",
+          "description": "Establish clear standards for branching, commit messages, and pull request reviews to maintain code quality as the project scales.",
+          "type": "documentation",
+          "status": "todo",
+          "priority": "low",
+          "scope": "CONTRIBUTING.md file and PR template creation.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Draft branching strategy (GitFlow or Trunk-based)"
+            ],
+            "implementation_tasks": [
+              "Define commit message conventions (Conventional Commits)",
+              "Create GitHub Pull Request template",
+              "Outline code review expectations"
+            ],
+            "testing_tasks": [
+              "Validate PR template rendering in GitHub"
+            ],
+            "documentation_tasks": [
+              "Publish CONTRIBUTING.md"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "CONTRIBUTING.md exists in root",
+              "PR template is active in .github/pull_request_template.md",
+              "Branching strategy is clearly defined"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "docs/contributing",
+          "recommended_commits": [
+            "docs: add contribution guidelines",
+            "docs: add pull request template"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [],
+          "tags": [
+            "process",
+            "documentation"
+          ],
+          "notes": "Keep the guidelines concise to encourage adoption."
+        },
+        {
+          "id": "DOC-005",
+          "title": "Draft Project Roadmap and Maintenance Plan",
+          "description": "Document the long-term vision for Memory Palace Chat, including upcoming features and maintenance strategies for the 3D environment.",
+          "type": "documentation",
+          "status": "todo",
+          "priority": "low",
+          "scope": "Roadmap.md file outlining Q3/Q4 goals.",
+          "technical_checklist": {
+            "setup_tasks": [
+              "Review project backlog for future features"
+            ],
+            "implementation_tasks": [
+              "Categorize features into 'Planned', 'In Progress', and 'Backlog'",
+              "Define maintenance tasks (e.g., dependency updates, performance profiling)",
+              "Outline spatial orchestration logic improvements"
+            ],
+            "testing_tasks": [
+              "Review roadmap with stakeholders"
+            ],
+            "documentation_tasks": [
+              "Publish ROADMAP.md"
+            ]
+          },
+          "acceptance_criteria": {
+            "criteria": [
+              "Roadmap is accessible in the documentation folder",
+              "Maintenance plan includes clear cadence for updates",
+              "Future spatial features are clearly defined"
+            ],
+            "automated_tests": false
+          },
+          "branch_name": "docs/roadmap",
+          "recommended_commits": [
+            "docs: initialize project roadmap",
+            "docs: add maintenance plan"
+          ],
+          "estimated_hours": 3,
+          "dependencies": [
+            "DOC-002"
+          ],
+          "tags": [
+            "planning",
+            "documentation"
+          ],
+          "notes": "Focus on the evolution of the 'architect' AI logic."
+        }
+      ],
+      "batchNumber": 7
+    }
+  ]
+}
